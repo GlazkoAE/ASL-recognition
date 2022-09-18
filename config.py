@@ -18,8 +18,7 @@ class AppConfig(YamlModel):
     lr: float
 
     @classmethod
-    def parse_raw(cls, filename: Union[str, Path] = "config.yaml",
-                  *args, **kwargs):
-        with open(filename, 'r') as f:
+    def parse_raw(cls, filename: Union[str, Path] = "config.yaml", *args, **kwargs):
+        with open(filename, "r") as f:
             data = f.read()
         return super().parse_raw(data, *args, **kwargs)
