@@ -39,5 +39,5 @@ jobs:
           git config --global user.name $NAME
           git config --global user.email $EMAIL
           git remote set-url origin https://x-access-token:$TOKEN@github.com/${{ github.repository }}
-          git commit -am "Automated changes"
+          git commit -am "Format code"
           git push
