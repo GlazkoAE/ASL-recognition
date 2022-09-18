@@ -1,0 +1,2 @@
+pydantic-yaml==0.8.0
+tqdm==4.64.1
