@@ -6,6 +6,10 @@ on:
 jobs:
   format:
     runs-on: ubuntu-latest
+    env:
+      NAME: ${{ secrets.USERNAME }}
+      EMAIL: ${{ secrets.EMAIL }}
+      TOKEN: ${{ secrets.ASL_SECRET }}
     steps:
       - name: Setup Python
         uses: actions/setup-python@v1
@@ -26,14 +30,6 @@ jobs:
         run: black .
       - name: Run isort
         run: isort .
-
-  push:
-    runs-on: ubuntu-latest
-    env:
-      NAME: 'Andrew Glazko'
-      EMAIL: 'glazko.ae@gmail.com'
-      TOKEN: ${{ secrets.ASL_SECRET }}
-    steps:
       - name: Check for modified files
         id: git-check
         run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
