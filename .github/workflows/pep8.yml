@@ -1,0 +1,43 @@
+name: auto-format
+
+on:
+  [pull_request]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    env:
+      NAME: ${{ secrets.USERNAME }}
+      EMAIL: ${{ secrets.EMAIL }}
+      TOKEN: ${{ secrets.ASL_SECRET }}
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.10.6
+          architecture: x64
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Install flake8
+        run: pip install flake8
+      - name: Install black
+        run: pip install black
+      - name: Install isort
+        run: pip install isort
+      - name: Run black
+        run: black .
+      - name: Run isort
+        run: isort .
+      - name: Run flake8
+        run: flake8 .
+      - name: Check for modified files
+        id: git-check
+        run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
+      - name: Push changes
+        if: steps.git-check.outputs.modified == 'true'
+        run: |
+          git config --global user.name $NAME
+          git config --global user.email $EMAIL
+          git remote set-url origin https://x-access-token:$TOKEN@github.com/${{ github.repository }}
+          git commit -am "Format code"
+          git push
