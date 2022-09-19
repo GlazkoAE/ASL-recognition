@@ -5,8 +5,11 @@ random_state: 42
 dataset_path: .
 dataset_output_path: ./dataset
 training_dataset_path: ./dataset
+imsize: (224, 224)
 
 # training
+model: resnet50
 epochs: 20
 batch_size: 16
 lr: 0.001
+num_workers: 8

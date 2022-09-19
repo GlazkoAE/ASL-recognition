@@ -12,11 +12,14 @@ class AppConfig(YamlModel):
     dataset_path: Path
     dataset_output_path: Path
     training_dataset_path: Path
+    imsize: (int, int)
 
     # training
+    model: str
     epochs: int
     batch_size: int
     lr: float
+    num_workers: int
 
     @classmethod
     def parse_raw(cls, filename: Union[str, Path] = "config.yaml", *args, **kwargs):
