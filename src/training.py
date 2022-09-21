@@ -41,9 +41,11 @@ class LightningModel(LightningModule):
 
 def main_actions(config: AppConfig):
     seed_everything(config.random_state, workers=True)
-    trainer = Trainer(max_epochs=config.epochs,
-                      accelerator="gpu",
-                      callbacks=[EarlyStopping(monitor="val_loss")])
+    trainer = Trainer(
+        max_epochs=config.epochs,
+        accelerator="gpu",
+        callbacks=[EarlyStopping(monitor="val_loss")],
+    )
 
     image_datasets = {
         x: datasets.ImageFolder(

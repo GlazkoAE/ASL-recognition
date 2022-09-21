@@ -1,4 +1,5 @@
 from clearml import PipelineController
+
 from config.config import AppConfig
 
 config: AppConfig = AppConfig.parse_raw()

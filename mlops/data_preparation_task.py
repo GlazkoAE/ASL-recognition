@@ -1,8 +1,9 @@
 from pathlib import Path
 
 from clearml import Dataset, Task, TaskTypes
+
 from config.config import AppConfig
-from src.data_preparation import main_actions, get_class_num
+from src.data_preparation import get_class_num, main_actions
 
 
 def main(config_path="../config/config.yaml"):

@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from clearml import Dataset, Task, TaskTypes
+
 from config.config import AppConfig
 from src.training import main_actions
 
