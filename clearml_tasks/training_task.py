@@ -1,4 +1,6 @@
 from pathlib import Path
+import sys
+sys.path.append('./..')
 
 from clearml import Dataset, Task, TaskTypes
 
@@ -19,6 +21,7 @@ def main(config_path="../config/config.yaml"):
     task.connect(clearml_params)
     dataset_path = Dataset.get(clearml_params["dataset_id"]).get_local_copy()
     config.training_dataset_path = Path(dataset_path)
+    config.class_num = clearml_params["class_num"]
     main_actions(config=config)
 
 

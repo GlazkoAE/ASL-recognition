@@ -1,6 +1,7 @@
 from clearml import PipelineController
 
 from config.config import AppConfig
+from src.data_validation import main_actions as validate
 
 
 def pre_execute_callback_example(a_pipeline, a_node, current_param_override):
@@ -23,23 +24,28 @@ def post_execute_callback_example(a_pipeline, a_node):
 
 
 def run_pipe():
-    config: AppConfig = AppConfig.parse_raw()
+    # config: AppConfig = AppConfig.parse_raw()
 
     pipe = PipelineController(
         name="Training with data preparation pipeline",
-        project=config.project_name,
+        project="ASL_recognition",
         version="0.0.1",
     )
+
+    pipe.add_parameter(
+        "id",
+        "8a7381ec14974ef78a6940229fc0f26a",
+    )
+
+    # config.dataset_id = "${pipe.id}"
 
     pipe.set_default_execution_queue("default")
 
     pipe.add_step(
         name="validation_data",
-        base_task_project=config.project_name,
+        base_task_project="ASL_recognition",
         base_task_name="data validation",
-        parameter_override={"General/dataset_id": config.dataset_id},
-        pre_execute_callback=pre_execute_callback_example,
-        post_execute_callback=post_execute_callback_example,
+        parameter_override={"General/dataset_id": "${pipeline.id}"},
     )
 
     pipe.add_step(
@@ -47,11 +53,9 @@ def run_pipe():
         parents=[
             "validation_data",
         ],
-        base_task_project=config.project_name,
+        base_task_project="ASL_recognition",
         base_task_name="data preparation",
-        parameter_override={"General/dataset_id": config.dataset_id},
-        pre_execute_callback=pre_execute_callback_example,
-        post_execute_callback=post_execute_callback_example,
+        parameter_override={"General/dataset_id": "${pipeline.id}"},
     )
 
     pipe.add_step(
@@ -59,18 +63,16 @@ def run_pipe():
         parents=[
             "preparation_data",
         ],
-        base_task_project=config.project_name,
+        base_task_project="ASL_recognition",
         base_task_name="training",
         parameter_override={
-            "General/dataset_id": "${preparation_data.parameters.output_dataset_id}",
-            "General/class_num": "${preparation_data.parameters.class_num}",
+            "General/dataset_id": "${preparation_data.parameters.General/output_dataset_id}",
+            "General/class_num": "${preparation_data.parameters.General/class_num}",
         },
-        pre_execute_callback=pre_execute_callback_example,
-        post_execute_callback=post_execute_callback_example,
     )
 
     # Starting the pipeline (in the background)
-    pipe.start_locally()
+    pipe.start_locally(run_pipeline_steps_locally=True)
 
     print("done")
 
