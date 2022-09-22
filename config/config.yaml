@@ -4,7 +4,7 @@ random_state: 42
 # clearml
 project_name: ASL_recognition
 dataset_name: ASL
-dataset_id: 4f15d3acaec34093b3dc51f42cdf2539
+dataset_id: 8a7381ec14974ef78a6940229fc0f26a
 
 # data
 dataset_path: .
