@@ -1,6 +1,7 @@
-from pathlib import Path
 import sys
-sys.path.append('./..')
+from pathlib import Path
+
+sys.path.append("./..")
 
 from clearml import Dataset, Task, TaskTypes
 
