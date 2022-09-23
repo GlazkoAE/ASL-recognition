@@ -1,7 +1,8 @@
 import sys
 from pathlib import Path
 
-from clearml import Dataset, Task, TaskTypes
+from clearml import Task, TaskTypes
+from utils import load_dataset
 
 
 def main(config_path="../config/config.yaml"):
@@ -20,14 +21,9 @@ def main(config_path="../config/config.yaml"):
     clearml_params = {"dataset_name": config.dataset_name,
                       "dataset_id": ""}
     task.connect(clearml_params)
-    # task.execute_remotely()
-    if clearml_params["dataset_id"]:
-        dataset_path = Dataset.get(dataset_id=clearml_params["dataset_id"],
-                                   ).get_local_copy()
-    else:
-        dataset_path = Dataset.get(dataset_name=clearml_params["dataset_name"],
-                                   dataset_tags=["latest"]
-                                   ).get_local_copy()
+
+    dataset_path, dataset_id = load_dataset(clearml_params)
+    task.set_parameter("dataset_id", value=dataset_id)
 
     config.dataset_path = Path(dataset_path)
     validate_data(config=config)
