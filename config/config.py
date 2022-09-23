@@ -11,14 +11,14 @@ class AppConfig(YamlModel):
     # clearml
     project_name: str
     dataset_name: str
-    dataset_id: str
+    # dataset_id: str
 
     # data
     dataset_path: Path
     dataset_output_path: Path
     training_dataset_path: Path
     imsize: tuple
-    class_num: int
+    # class_num: int
 
     # training
     model: str

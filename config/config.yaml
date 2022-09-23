@@ -3,15 +3,13 @@ random_state: 42
 
 # clearml
 project_name: ASL_recognition
-dataset_name: ASL
-dataset_id: 8a7381ec14974ef78a6940229fc0f26a
+dataset_name: ASL_raw
 
 # data
 dataset_path: .
-dataset_output_path: ./dataset
-training_dataset_path: ./dataset
+dataset_output_path: ./../dataset
+training_dataset_path: ./../dataset
 imsize: [224, 224]
-class_num: 5
 
 # training
 model: resnet50
