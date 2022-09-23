@@ -46,10 +46,8 @@ def run_pipe(is_local):
         base_task_project="ASL_recognition",
         base_task_name="training",
         parameter_override={
-            "General/dataset_id":
-                "${preparation_data.parameters.General/output_dataset_id}",
-            "General/class_num":
-                "${preparation_data.parameters.General/class_num}",
+            "General/dataset_id": "${preparation_data.parameters.General/output_dataset_id}",
+            "General/class_num": "${preparation_data.parameters.General/class_num}",
         },
     )
 
@@ -62,11 +60,9 @@ def run_pipe(is_local):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--local',
-                        action='store_const',
-                        dest='is_local',
-                        const=True,
-                        default=False)
+    parser.add_argument(
+        "--local", action="store_const", dest="is_local", const=True, default=False
+    )
     args = parser.parse_args()
 
     run_pipe(args.is_local)
