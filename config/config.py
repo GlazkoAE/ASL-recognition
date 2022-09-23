@@ -11,6 +11,7 @@ class AppConfig(YamlModel):
     # clearml
     project_name: str
     dataset_name: str
+    output_dataset_name: str
     # dataset_id: str
 
     # data
@@ -18,6 +19,7 @@ class AppConfig(YamlModel):
     dataset_output_path: Path
     training_dataset_path: Path
     imsize: tuple
+    dataset_split_ratio: tuple
     # class_num: int
 
     # training

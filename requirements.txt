@@ -7,3 +7,4 @@ torchvision==0.13.1
 pytorch-lightning==1.7.6
 scipy==1.9.1
 clearml==1.7.0
+split-folders==0.5.1
