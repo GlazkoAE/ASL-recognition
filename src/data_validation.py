@@ -1,7 +1,7 @@
 from PIL import Image
 from tqdm import tqdm
 
-from config import AppConfig
+from config.config import AppConfig
 
 
 def main_actions(config: AppConfig):
