@@ -20,6 +20,7 @@ def main(config_path="../config/config.yaml"):
 
     clearml_params = config.dict()
     task.connect(clearml_params)
+    task.execute_remotely()
     dataset_path = Dataset.get(clearml_params["dataset_id"]).get_local_copy()
     config.training_dataset_path = Path(dataset_path)
     config.class_num = clearml_params["class_num"]

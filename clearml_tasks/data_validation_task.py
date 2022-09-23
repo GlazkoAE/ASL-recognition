@@ -17,6 +17,7 @@ def main(config_path="../config/config.yaml"):
     )
     clearml_params = {"dataset_id": "4f15d3acaec34093b3dc51f42cdf2539"}
     task.connect(clearml_params)
+    task.execute_remotely()
     dataset_path = Dataset.get(**clearml_params).get_local_copy()
 
     config: AppConfig = AppConfig.parse_raw(filename=config_path)
