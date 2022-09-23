@@ -3,13 +3,13 @@ from pathlib import Path
 
 sys.path.append("./..")
 
-from clearml import Dataset, Task, TaskTypes
-
-from config.config import AppConfig
-from src.data_validation import main_actions
-
 
 def main(config_path="../config/config.yaml"):
+    from clearml import Dataset, Task, TaskTypes
+
+    from config.config import AppConfig
+    from src.data_validation import main_actions
+
     task: Task = Task.init(
         project_name="ASL_recognition",
         task_name="data validation",

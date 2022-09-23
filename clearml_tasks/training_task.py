@@ -3,13 +3,13 @@ from pathlib import Path
 
 sys.path.append("./..")
 
-from clearml import Dataset, Task, TaskTypes
-
-from config.config import AppConfig
-from src.training import main_actions
-
 
 def main(config_path="../config/config.yaml"):
+    from clearml import Dataset, Task, TaskTypes
+
+    from config.config import AppConfig
+    from src.training import main_actions
+
     config: AppConfig = AppConfig.parse_raw(filename=config_path)
 
     task: Task = Task.init(
