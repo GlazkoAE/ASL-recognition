@@ -1,11 +1,11 @@
 import sys
 from pathlib import Path
 
-sys.path.append("./..")
+from clearml import Dataset, Task, TaskTypes
 
 
 def main(config_path="../config/config.yaml"):
-    from clearml import Dataset, Task, TaskTypes
+    sys.path.append("./..")
 
     from config.config import AppConfig
     from src.data_validation import validate_data
