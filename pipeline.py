@@ -2,11 +2,8 @@ import argparse
 
 from clearml import PipelineController
 
-from config.config import AppConfig
-
 
 def run_pipe(is_local):
-    config: AppConfig = AppConfig.parse_raw()
 
     pipe = PipelineController(
         name="Full pipeline",
