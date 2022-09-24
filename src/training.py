@@ -48,13 +48,14 @@ def train_model(config: AppConfig):
 
         if val_loss < best_val_loss:
             best_val_loss = val_loss
+            if model_path:
+                os.remove(model_path)
             model_path = "model_{}_{}".format(timestamp, epoch)
             torch.save(model.model.state_dict(), model_path)
 
     best_model_path = model.serialize(
         model_path=model_path, image_size=config.imsize, name=config.project_name
     )
-
     os.remove(model_path)
 
     return best_model_path

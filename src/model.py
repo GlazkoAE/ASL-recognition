@@ -21,7 +21,7 @@ class Model:
     def training_step(self, dataloader, writer, epoch, log_every):
         running_loss = 0
 
-        self.model.train(True)
+        self.model.train()
         for batch_idx, (images, labels) in enumerate(dataloader):
             images = images.to(self.device)
             labels = labels.to(self.device)
@@ -40,8 +40,8 @@ class Model:
             # Log
             if batch_idx % log_every == log_every - 1:
                 last_loss = running_loss / log_every
-                print(
-                    "Epoch ", epoch, ", Batch ", batch_idx, ", Train loss: ", last_loss
+                print("Epoch {0}, batch {1}/{2}: train loss {3}".format(
+                    epoch, batch_idx + 1, len(dataloader), last_loss)
                 )
                 niter = epoch * len(dataloader) + batch_idx + 1
                 writer.add_scalar("Train/Loss", last_loss, niter)
@@ -54,27 +54,34 @@ class Model:
         running_f1_macro = 0
         running_f1_w = 0
 
-        self.model.train(False)
+        print("Epoch {0} validation...".format(epoch))
+        self.model.eval()
         for images, labels in dataloader:
             images = images.to(self.device)
             labels = labels.to(self.device)
             output = self.model(images)
             loss = self.loss_func(output, labels)
-            running_loss += loss
+            running_loss += loss.item()
 
             # Metrics
             labels = labels.cpu().data.numpy()
             output_max = torch.argmax(output.cpu(), dim=1).data.numpy()
-            running_acc = metrics.accuracy_score(labels, output_max)
-            running_f1_micro = metrics.f1_score(labels, output_max, average="micro")
-            running_f1_macro = metrics.f1_score(labels, output_max, average="macro")
-            running_f1_w = metrics.f1_score(labels, output_max, average="weighted")
+            running_acc += metrics.accuracy_score(labels, output_max)
+            running_f1_micro += metrics.f1_score(labels, output_max, average="micro")
+            running_f1_macro += metrics.f1_score(labels, output_max, average="macro")
+            running_f1_w += metrics.f1_score(labels, output_max, average="weighted")
 
         avg_loss = running_loss / len(dataloader)
-        writer.add_scalar("Val/accuracy", running_acc / len(dataloader), epoch + 1)
-        writer.add_scalar("Val/f1_micro", running_f1_micro / len(dataloader), epoch + 1)
-        writer.add_scalar("Val/f1_macro", running_f1_macro / len(dataloader), epoch + 1)
-        writer.add_scalar("Val/f1_weighted", running_f1_w / len(dataloader), epoch + 1)
+        print("Val loss ", avg_loss)
+        writer.add_scalar("Val/Loss", avg_loss, epoch + 1)
+        writer.add_scalar("Val_metrics/Accuracy",
+                          running_acc / len(dataloader), epoch + 1)
+        writer.add_scalar("Val_metrics/F1_micro",
+                          running_f1_micro / len(dataloader), epoch + 1)
+        writer.add_scalar("Val_metrics/F1_macro",
+                          running_f1_macro / len(dataloader), epoch + 1)
+        writer.add_scalar("Val_metrics/F1_weighted",
+                          running_f1_w / len(dataloader), epoch + 1)
 
         return avg_loss
 
