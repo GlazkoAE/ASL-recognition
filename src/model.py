@@ -40,8 +40,10 @@ class Model:
             # Log
             if batch_idx % log_every == log_every - 1:
                 last_loss = running_loss / log_every
-                print("Epoch {0}, batch {1}/{2}: train loss {3}".format(
-                    epoch, batch_idx + 1, len(dataloader), last_loss)
+                print(
+                    "Epoch {0}, batch {1}/{2}: train loss {3}".format(
+                        epoch, batch_idx + 1, len(dataloader), last_loss
+                    )
                 )
                 niter = epoch * len(dataloader) + batch_idx + 1
                 writer.add_scalar("Train/Loss", last_loss, niter)
@@ -74,14 +76,18 @@ class Model:
         avg_loss = running_loss / len(dataloader)
         print("Val loss ", avg_loss)
         writer.add_scalar("Val/Loss", avg_loss, epoch + 1)
-        writer.add_scalar("Val_metrics/Accuracy",
-                          running_acc / len(dataloader), epoch + 1)
-        writer.add_scalar("Val_metrics/F1_micro",
-                          running_f1_micro / len(dataloader), epoch + 1)
-        writer.add_scalar("Val_metrics/F1_macro",
-                          running_f1_macro / len(dataloader), epoch + 1)
-        writer.add_scalar("Val_metrics/F1_weighted",
-                          running_f1_w / len(dataloader), epoch + 1)
+        writer.add_scalar(
+            "Val_metrics/Accuracy", running_acc / len(dataloader), epoch + 1
+        )
+        writer.add_scalar(
+            "Val_metrics/F1_micro", running_f1_micro / len(dataloader), epoch + 1
+        )
+        writer.add_scalar(
+            "Val_metrics/F1_macro", running_f1_macro / len(dataloader), epoch + 1
+        )
+        writer.add_scalar(
+            "Val_metrics/F1_weighted", running_f1_w / len(dataloader), epoch + 1
+        )
 
         return avg_loss
 
