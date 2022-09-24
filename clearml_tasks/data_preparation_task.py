@@ -20,7 +20,7 @@ def main(config_path="../config/config.yaml"):
     )
 
     clearml_params = {"dataset_name": config.dataset_name,
-                      "output_dataset_name": config.output_dataset_name,
+                      "output_dataset_name": config.training_dataset_name,
                       "dataset_id": "",
                       "random_state": config.random_state}
     task.connect(clearml_params)

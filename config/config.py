@@ -11,7 +11,7 @@ class AppConfig(YamlModel):
     # clearml
     project_name: str
     dataset_name: str
-    output_dataset_name: str
+    training_dataset_name: str
     # dataset_id: str
 
     # data
@@ -20,7 +20,7 @@ class AppConfig(YamlModel):
     training_dataset_path: Path
     imsize: tuple
     dataset_split_ratio: tuple
-    # class_num: int
+    class_num: int
 
     # training
     model: str
@@ -28,6 +28,7 @@ class AppConfig(YamlModel):
     batch_size: int
     lr: float
     num_workers: int
+    log_every: int
 
     @classmethod
     def parse_raw(

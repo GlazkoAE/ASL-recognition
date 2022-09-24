@@ -4,7 +4,7 @@ random_state: 42
 # clearml
 project_name: ASL_recognition
 dataset_name: ASL_raw
-output_dataset_name: ASL
+training_dataset_name: ASL
 
 # data
 dataset_path: .
@@ -12,10 +12,12 @@ dataset_output_path: ./../dataset
 training_dataset_path: ./../dataset
 imsize: [224, 224]
 dataset_split_ratio: [.7, .2, .1]
+class_num: 29
 
 # training
 model: resnet50
-epochs: 2
-batch_size: 16
+epochs: 20
+batch_size: 64
 lr: 0.001
 num_workers: 4
+log_every: 500
