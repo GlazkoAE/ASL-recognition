@@ -35,7 +35,7 @@ def main(config_path="../config/config.yaml"):
     config.class_num = clearml_params["class_num"]
     model_path = train_model(config=config)
 
-    task.upload_artifact(name='onnx_model', artifact_object=model_path)
+    task.upload_artifact(name="onnx_model", artifact_object=model_path)
     os.remove(model_path)
 
 

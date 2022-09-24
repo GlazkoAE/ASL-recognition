@@ -1,8 +1,8 @@
 import os
 
+import sklearn.metrics as metrics
 import torch
 from torch import nn
-import sklearn.metrics as metrics
 
 from src.utils import get_model
 
@@ -15,7 +15,7 @@ class Model:
         self._setup_fc_layer(class_num)
         self._setup_optimizer(optimizer, lr)
         self.loss_func = loss_func
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model.to(self.device)
 
     def training_step(self, dataloader, writer, epoch, log_every):
@@ -40,11 +40,11 @@ class Model:
             # Log
             if batch_idx % log_every == log_every - 1:
                 last_loss = running_loss / log_every
-                print('Epoch ', epoch,
-                      ', Batch ', batch_idx,
-                      ', Train loss: ', last_loss)
+                print(
+                    "Epoch ", epoch, ", Batch ", batch_idx, ", Train loss: ", last_loss
+                )
                 niter = epoch * len(dataloader) + batch_idx + 1
-                writer.add_scalar('Train/Loss', last_loss, niter)
+                writer.add_scalar("Train/Loss", last_loss, niter)
                 running_loss = 0
 
     def validation_step(self, dataloader, writer, epoch):
@@ -71,10 +71,10 @@ class Model:
             running_f1_w = metrics.f1_score(labels, output_max, average="weighted")
 
         avg_loss = running_loss / len(dataloader)
-        writer.add_scalar('Val/accuracy', running_acc / len(dataloader), epoch + 1)
-        writer.add_scalar('Val/f1_micro', running_f1_micro / len(dataloader), epoch + 1)
-        writer.add_scalar('Val/f1_macro', running_f1_macro / len(dataloader), epoch + 1)
-        writer.add_scalar('Val/f1_weighted', running_f1_w / len(dataloader), epoch + 1)
+        writer.add_scalar("Val/accuracy", running_acc / len(dataloader), epoch + 1)
+        writer.add_scalar("Val/f1_micro", running_f1_micro / len(dataloader), epoch + 1)
+        writer.add_scalar("Val/f1_macro", running_f1_macro / len(dataloader), epoch + 1)
+        writer.add_scalar("Val/f1_weighted", running_f1_w / len(dataloader), epoch + 1)
 
         return avg_loss
 
@@ -83,7 +83,7 @@ class Model:
         self.model.load_state_dict(torch.load(model_path))
 
         # set the model to inference mode
-        self.model.to(torch.device('cpu'))
+        self.model.to(torch.device("cpu"))
         self.model.eval()
 
         # Input to the model
@@ -91,15 +91,16 @@ class Model:
         path = os.path.join("../", name + ".onnx")
 
         # Export the model
-        torch.onnx.export(self.model,  # model being run
-                          x,  # model input
-                          path,
-                          export_params=True,
-                          opset_version=10,
-                          do_constant_folding=True,
-                          input_names=['input'],
-                          output_names=['output'],
-                          )
+        torch.onnx.export(
+            self.model,  # model being run
+            x,  # model input
+            path,
+            export_params=True,
+            opset_version=10,
+            do_constant_folding=True,
+            input_names=["input"],
+            output_names=["output"],
+        )
         return path
 
     def _freeze_layers(self):

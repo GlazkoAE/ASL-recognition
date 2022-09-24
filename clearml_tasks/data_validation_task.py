@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 
 from clearml import Task, TaskTypes
+
 from utils import load_dataset
 
 
@@ -18,8 +19,7 @@ def main(config_path="../config/config.yaml"):
         task_name="data validation",
         task_type=TaskTypes.data_processing,
     )
-    clearml_params = {"dataset_name": config.dataset_name,
-                      "dataset_id": ""}
+    clearml_params = {"dataset_name": config.dataset_name, "dataset_id": ""}
     task.connect(clearml_params)
 
     dataset_path, dataset_id = load_dataset(clearml_params)

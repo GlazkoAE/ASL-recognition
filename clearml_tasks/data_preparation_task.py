@@ -19,10 +19,12 @@ def main(config_path="../config/config.yaml"):
         task_type=TaskTypes.data_processing,
     )
 
-    clearml_params = {"dataset_name": config.dataset_name,
-                      "output_dataset_name": config.training_dataset_name,
-                      "dataset_id": "",
-                      "random_state": config.random_state}
+    clearml_params = {
+        "dataset_name": config.dataset_name,
+        "output_dataset_name": config.training_dataset_name,
+        "dataset_id": "",
+        "random_state": config.random_state,
+    }
     task.connect(clearml_params)
 
     dataset_path, input_dataset_id = load_dataset(clearml_params)
@@ -33,7 +35,7 @@ def main(config_path="../config/config.yaml"):
 
     dataset = Dataset.create(
         dataset_project=config.project_name,
-        dataset_name=clearml_params["output_dataset_name"]
+        dataset_name=clearml_params["output_dataset_name"],
     )
     dataset.add_files(config.dataset_output_path)
     dataset.add_tags(str(config.imsize[0]) + "x" + str(config.imsize[1]))

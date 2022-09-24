@@ -1,8 +1,8 @@
 import os
 
+import splitfolders
 from PIL import Image
 from tqdm import tqdm
-import splitfolders
 
 from config.config import AppConfig
 
@@ -27,15 +27,16 @@ def get_class_num(config: AppConfig):
 
 
 def train_test_split(config: AppConfig):
-    print('Splitting dataset to train/val/test')
-    splitfolders.ratio(input=config.dataset_path,
-                       output=config.dataset_output_path,
-                       seed=config.random_state,
-                       ratio=config.dataset_split_ratio,
-                       group_prefix=None,
-                       move=False
-                       )
-    print('Done')
+    print("Splitting dataset to train/val/test")
+    splitfolders.ratio(
+        input=config.dataset_path,
+        output=config.dataset_output_path,
+        seed=config.random_state,
+        ratio=config.dataset_split_ratio,
+        group_prefix=None,
+        move=False,
+    )
+    print("Done")
 
 
 def main():
