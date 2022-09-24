@@ -2,22 +2,16 @@ import argparse
 
 from clearml import PipelineController
 
-from config.config import AppConfig
-
 
 def run_pipe(is_local):
-    config: AppConfig = AppConfig.parse_raw()
 
     pipe = PipelineController(
-        name="Full ASL recognition pipeline",
+        name="Full pipeline",
         project="ASL_recognition",
-        version="0.0.1",
+        version="0.1.0",
     )
 
-    pipe.add_parameter(
-        "dataset_id",
-        config.dataset_id,
-    )
+    pipe.add_parameter("dataset_id", "")
 
     pipe.set_default_execution_queue("default")
 
@@ -25,7 +19,7 @@ def run_pipe(is_local):
         name="validation_data",
         base_task_project="ASL_recognition",
         base_task_name="data validation",
-        parameter_override={"General/dataset_id": "${pipeline.id}"},
+        parameter_override={"General/dataset_id": "${pipeline.dataset_id}"},
     )
 
     pipe.add_step(
@@ -35,7 +29,9 @@ def run_pipe(is_local):
         ],
         base_task_project="ASL_recognition",
         base_task_name="data preparation",
-        parameter_override={"General/dataset_id": "${pipeline.id}"},
+        parameter_override={
+            "General/dataset_id": "${validation_data.parameters.General/dataset_id}"
+        },
     )
 
     pipe.add_step(
@@ -48,6 +44,7 @@ def run_pipe(is_local):
         parameter_override={
             "General/dataset_id": "${preparation_data.parameters.General/output_dataset_id}",
             "General/class_num": "${preparation_data.parameters.General/class_num}",
+            "General/dataset_name": "${preparation_data.parameters.General/output_dataset_name}",
         },
     )
 

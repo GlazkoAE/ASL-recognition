@@ -1,86 +1,78 @@
-import cv2
+import os
+from datetime import datetime
+
 import torch
-from pytorch_lightning import LightningModule, Trainer, seed_everything
-from pytorch_lightning.callbacks.early_stopping import EarlyStopping
-from torchvision import datasets
+from torch.utils.tensorboard import SummaryWriter
+from tqdm import tqdm
 
 from config.config import AppConfig
-from src.utils import get_model
+from src.dataset import Dataset
+from src.model import Model
 
 
-class LightningModel(LightningModule):
-    def __init__(self, model, optimizer, loss_func, lr):
-        super().__init__()
-        self.model = model
-        self.optimizer = optimizer
-        self.loss_func = loss_func
-        self.lr = lr
+def train_model(config: AppConfig):
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    writer = SummaryWriter("runs/fashion_trainer_{}".format(timestamp))
 
-    def training_step(self, batch, batch_idx):
-        # training_step defines the train loop.
-        x, y = batch
-        y_hat = self.model(x)
-        loss = self.loss_func(y_hat, y)
-        self.log("train_loss", loss)
-        return loss
-
-    def validation_step(self, batch, batch_idx):
-        x, y = batch
-        y_hat = self.model(x)
-        loss = self.loss_func(y_hat, y)
-        self.log("val_loss", loss)
-        return loss
-
-    def forward(self, x):
-        return self.model(x)
-
-    def configure_optimizers(self):
-        optimizer = self.optimizer(self.parameters(), lr=self.lr)
-        return optimizer
-
-
-def main_actions(config: AppConfig):
-    seed_everything(config.random_state, workers=True)
-    trainer = Trainer(
-        max_epochs=config.epochs,
-        accelerator="gpu",
-        callbacks=[EarlyStopping(monitor="val_loss")],
+    dataset: Dataset = Dataset(
+        dataset_path=config.training_dataset_path,
+        batch_size=config.batch_size,
+        num_workers=config.num_workers,
     )
 
-    image_datasets = {
-        x: datasets.ImageFolder(
-            config.training_dataset_path / x,
-            loader=lambda x: torch.Tensor(cv2.imread(x)).permute(2, 0, 1),
+    model: Model = Model(
+        model_name=config.model,
+        optimizer=torch.optim.Adam,
+        loss_func=torch.nn.CrossEntropyLoss(),
+        lr=config.lr,
+        class_num=config.class_num,
+        seed=config.random_state,
+    )
+
+    best_val_loss = 1e6
+    model_path = ""
+
+    for epoch in tqdm(range(config.epochs), desc="Model training"):
+
+        model.training_step(
+            dataloader=dataset.train_dataloader,
+            writer=writer,
+            epoch=epoch,
+            log_every=config.log_every,
         )
-        for x in ["train", "val"]
-    }
 
-    train_dataloader = torch.utils.data.DataLoader(
-        image_datasets["train"],
-        batch_size=config.batch_size,
-        shuffle=True,
-        num_workers=config.num_workers,
+        val_loss = model.validation_step(
+            dataloader=dataset.val_dataloader,
+            writer=writer,
+            epoch=epoch,
+        )
+
+        writer.flush()
+
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
+            if model_path:
+                os.remove(model_path)
+            model_path = "model_{}_{}".format(timestamp, epoch)
+            torch.save(model.model.state_dict(), model_path)
+
+    best_model_path = model.serialize(
+        model_path=model_path, image_size=config.imsize, name=config.project_name
     )
+    os.remove(model_path)
 
-    val_dataloader = torch.utils.data.DataLoader(
-        image_datasets["val"],
-        batch_size=config.batch_size,
-        shuffle=False,
-        num_workers=config.num_workers,
-    )
+    labels_file = "labels.txt"
+    with open(labels_file, "w") as file:
+        for item in dataset.labels_map:
+            # write each item on a new line
+            file.write("%s\n" % item)
 
-    model_ft = get_model(config.model)
-    num_ftrs = model_ft.fc.in_features
-    model_ft.fc = torch.nn.Linear(num_ftrs, config.class_num)
-    pl_model = LightningModel(
-        model_ft, torch.optim.Adam, torch.nn.CrossEntropyLoss(), config.lr
-    )
-
-    trainer.fit(pl_model, train_dataloader, val_dataloader)
+    return best_model_path, labels_file
 
 
 def main():
-    pass
+    config = AppConfig.parse_raw("./../config/config.yaml")
+    train_model(config=config)
 
 
 if __name__ == "__main__":

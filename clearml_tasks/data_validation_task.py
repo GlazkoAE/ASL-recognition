@@ -1,28 +1,32 @@
 import sys
 from pathlib import Path
 
-sys.path.append("./..")
+from clearml import Task, TaskTypes
+
+from utils import load_dataset
 
 
 def main(config_path="../config/config.yaml"):
-    from clearml import Dataset, Task, TaskTypes
+    sys.path.append("./..")
 
     from config.config import AppConfig
-    from src.data_validation import main_actions
+    from src.data_validation import validate_data
+
+    config: AppConfig = AppConfig.parse_raw(filename=config_path)
 
     task: Task = Task.init(
-        project_name="ASL_recognition",
+        project_name=config.project_name,
         task_name="data validation",
         task_type=TaskTypes.data_processing,
     )
-    clearml_params = {"dataset_id": "4f15d3acaec34093b3dc51f42cdf2539"}
+    clearml_params = {"dataset_name": config.dataset_name, "dataset_id": ""}
     task.connect(clearml_params)
-    task.execute_remotely()
-    dataset_path = Dataset.get(**clearml_params).get_local_copy()
 
-    config: AppConfig = AppConfig.parse_raw(filename=config_path)
+    dataset_path, dataset_id = load_dataset(clearml_params)
+    task.set_parameter("dataset_id", value=dataset_id)
+
     config.dataset_path = Path(dataset_path)
-    main_actions(config=config)
+    validate_data(config=config)
 
 
 if __name__ == "__main__":
