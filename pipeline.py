@@ -33,7 +33,8 @@ def run_pipe(is_local):
         base_task_project="ASL_recognition",
         base_task_name="data preparation",
         parameter_override={
-            "General/dataset_id": "${validation_data.parameters.General/dataset_id}"},
+            "General/dataset_id": "${validation_data.parameters.General/dataset_id}"
+        },
     )
 
     pipe.add_step(
