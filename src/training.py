@@ -31,6 +31,7 @@ def train_model(config: AppConfig):
 
     best_val_loss = 1e6
     model_path = ""
+
     for epoch in tqdm(range(config.epochs), desc="Model training"):
 
         model.training_step(
@@ -39,11 +40,13 @@ def train_model(config: AppConfig):
             epoch=epoch,
             log_every=config.log_every,
         )
+
         val_loss = model.validation_step(
             dataloader=dataset.val_dataloader,
             writer=writer,
             epoch=epoch,
         )
+
         writer.flush()
 
         if val_loss < best_val_loss:
@@ -58,11 +61,12 @@ def train_model(config: AppConfig):
     )
     os.remove(model_path)
 
-    return best_model_path
+    return best_model_path, dataset.labels_map
 
 
 def main():
-    pass
+    config = AppConfig.parse_raw('./../config/config.yaml')
+    train_model(config=config)
 
 
 if __name__ == "__main__":

@@ -46,9 +46,10 @@ def main(config_path="../config/config.yaml"):
 
     config.training_dataset_path = Path(dataset_path)
     config.class_num = clearml_params["class_num"]
-    model_path = train_model(config=config)
+    model_path, labels_map = train_model(config=config)
 
     task.upload_artifact(name="onnx_model", artifact_object=model_path)
+    task.upload_artifact(name="labels_map", artifact_object=labels_map)
     os.remove(model_path)
 
 
