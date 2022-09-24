@@ -65,7 +65,7 @@ def train_model(config: AppConfig):
 
 
 def main():
-    config = AppConfig.parse_raw('./../config/config.yaml')
+    config = AppConfig.parse_raw("./../config/config.yaml")
     train_model(config=config)
 
 

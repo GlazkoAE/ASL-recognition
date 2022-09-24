@@ -34,5 +34,7 @@ class Dataset:
             num_workers=num_workers,
         )
 
-        self.labels_map = self.image_datasets["train"].find_classes(dataset_path / "train")
+        self.labels_map = self.image_datasets["train"].find_classes(
+            dataset_path / "train"
+        )
         self.labels_map = list(self.labels_map[1].keys())
