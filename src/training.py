@@ -61,8 +61,8 @@ def train_model(config: AppConfig):
     )
     os.remove(model_path)
 
-    labels_file = 'labels.txt'
-    with open(labels_file, 'w') as file:
+    labels_file = "labels.txt"
+    with open(labels_file, "w") as file:
         for item in dataset.labels_map:
             # write each item on a new line
             file.write("%s\n" % item)
