@@ -7,8 +7,8 @@ sys.path.append("./..")
 def main(config_path="../config/config.yaml"):
     from clearml import Task, TaskTypes
 
-    from src.build_triton_server import build_triton_server
     from config.config import AppConfig
+    from src.build_triton_server import build_triton_server
 
     config: AppConfig = AppConfig.parse_raw(filename=config_path)
 
@@ -43,13 +43,15 @@ def main(config_path="../config/config.yaml"):
 
     build_triton_server(config=config, model=model, labels=labels)
 
-    run_command = "docker run --gpus all --rm " \
-                  "-p 8000:{0} -p 8001:{1} -p 8002:{2}" \
-                  "-v ./../triton/server/models:/models " \
-                  "triton-server tritonserver " \
-                  "--model-repository=/models".format(config.http_endpoint,
-                                                      config.grpc_endpoint,
-                                                      config.prometheus_endpoint)
+    run_command = (
+        "docker run --gpus all --rm "
+        "-p 8000:{0} -p 8001:{1} -p 8002:{2}"
+        "-v ./../triton/server/models:/models "
+        "triton-server tritonserver "
+        "--model-repository=/models".format(
+            config.http_endpoint, config.grpc_endpoint, config.prometheus_endpoint
+        )
+    )
 
     subprocess.run(["docker build --tag triton-server ./../triton/server"])
     subprocess.run(run_command)
