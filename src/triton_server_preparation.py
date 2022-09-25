@@ -1,8 +1,6 @@
 import os
 from pathlib import Path
 
-from tqdm import tqdm
-
 from config.config import AppConfig
 
 

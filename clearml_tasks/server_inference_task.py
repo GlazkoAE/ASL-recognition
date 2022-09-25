@@ -9,7 +9,7 @@ def main(config_path="../config/config.yaml"):
     from clearml import Task, TaskTypes
 
     from config.config import AppConfig
-    from src.build_triton_server import build_triton_server
+    from src.triton_server_preparation import build_triton_server
 
     config: AppConfig = AppConfig.parse_raw(filename=config_path)
 
