@@ -1,3 +1,4 @@
+import os
 import subprocess
 import sys
 
@@ -43,18 +44,7 @@ def main(config_path="../config/config.yaml"):
 
     build_triton_server(config=config, model=model, labels=labels)
 
-    run_command = (
-        "docker run --gpus all --rm "
-        "-p 8000:{0} -p 8001:{1} -p 8002:{2}"
-        "-v ./../triton/server/models:/models "
-        "triton-server tritonserver "
-        "--model-repository=/models".format(
-            config.http_endpoint, config.grpc_endpoint, config.prometheus_endpoint
-        )
-    )
-
-    subprocess.run(["docker build --tag triton-server ./../triton/server"])
-    subprocess.run(run_command)
+    task.upload_artifact(name="server_model", artifact_object="./../triton/server/")
 
 
 if __name__ == "__main__":
