@@ -30,6 +30,13 @@ class AppConfig(YamlModel):
     num_workers: int
     log_every: int
 
+    # inference
+    training_task_id: str
+    http_endpoint: int
+    grpc_endpoint: int
+    prometheus_endpoint: int
+    triton_path: Path
+
     @classmethod
     def parse_raw(
         cls, filename: Union[str, Path] = "config/config.yaml", *args, **kwargs

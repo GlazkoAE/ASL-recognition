@@ -10,5 +10,4 @@ RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86
     apt-get update && apt-get clean && apt-get install -fy && dpkg-reconfigure debconf
 
 RUN apt install ffmpeg libsm6 libxext6  -y && \
-    # pip install opencv-python
     rm -rf /var/lib/{apt,dpkg,cache,log}/
