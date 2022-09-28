@@ -30,4 +30,5 @@ training_task_id: "826321a133d54e7b9ea662e6babbdaaa"
 http_endpoint: 8000
 grpc_endpoint: 8001
 prometheus_endpoint: 8002
+server_host: localhost
 triton_path: "./../triton/"

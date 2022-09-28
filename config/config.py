@@ -35,6 +35,7 @@ class AppConfig(YamlModel):
     http_endpoint: int
     grpc_endpoint: int
     prometheus_endpoint: int
+    server_host: str
     triton_path: Path
 
     @classmethod

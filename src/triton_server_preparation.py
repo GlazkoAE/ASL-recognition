@@ -4,19 +4,17 @@ from pathlib import Path
 from config.config import AppConfig
 
 
-def build_triton_server(config: AppConfig, model, labels):
+def build_triton_server(config: AppConfig, model):
 
     # Setup all paths
     server_path = Path(config.triton_path / "server" / "models")
     preprocess_path = Path(server_path / "preprocess")
-    print(config.model)
     model_path = Path(server_path / config.model)
     ensemble_path = Path(server_path / "ensemble")
     config_template_path = Path(server_path / "config_template.pbtxt")
 
     # Move artifacts to server
     os.rename(model, Path(model_path / "1" / "model.onnx"))
-    os.rename(labels, Path(model_path / "labels.txt"))
 
     _write_ensemble_config(
         config_path=Path(ensemble_path / "config.pbtxt"), config=config
@@ -116,8 +114,7 @@ def _write_config(config_path: Path, template: Path, name, input_dim, output_dim
 def main():
     config = AppConfig.parse_raw("./../config/config.yaml")
     model = Path("./../triton/server/models/resnet50/1/model.onnx")
-    labels = Path("./../triton/server/models/resnet50/labels.txt")
-    build_triton_server(config=config, model=model, labels=labels)
+    build_triton_server(config=config, model=model)
 
 
 if __name__ == "__main__":
