@@ -1,0 +1,3 @@
+class_num: 29
+server_host: localhost
+grpc_endpoint: 8001

@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+*dataset/
+*.conf
+*lightning_logs/
+*runs/
+
+.idea/
+
+*.onnx
