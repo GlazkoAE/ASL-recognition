@@ -37,7 +37,7 @@ def _write_config(client_config: Path, config: AppConfig):
 def main():
     config = AppConfig.parse_raw("./../config/config.yaml")
     labels = Path("../triton/client/labels.txt")
-    build_triton_server(config=config, labels=labels)
+    build_triton_client(config=config, labels=labels)
 
 
 if __name__ == "__main__":
