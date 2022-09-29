@@ -10,9 +10,7 @@ class AppConfig(YamlModel):
     server_host: str
 
     @classmethod
-    def parse_raw(
-        cls, filename: Union[str, Path] = "./config.yaml", *args, **kwargs
-    ):
+    def parse_raw(cls, filename: Union[str, Path] = "./config.yaml", *args, **kwargs):
         with open(filename, "r") as f:
             data = f.read()
         return super().parse_raw(data, *args, **kwargs)

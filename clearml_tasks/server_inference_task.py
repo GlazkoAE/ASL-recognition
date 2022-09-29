@@ -34,7 +34,7 @@ def main(config_path="../config/config.yaml"):
     task.set_parameters_as_dict(clearml_params)
 
     config.class_num = clearml_params["class_num"]
-    config.imsize = tuple(map(int, clearml_params["image_size"][1:-1].split(', ')))
+    config.imsize = tuple(map(int, clearml_params["image_size"][1:-1].split(", ")))
     config.model = clearml_params["model"]
 
     model = training_task.artifacts["onnx_model"].get_local_copy()
