@@ -67,6 +67,7 @@ def train_model(config: AppConfig):
             # write each item on a new line
             print(item)
             file.write("%s\n" % item)
+    labels_file = os.path.abspath(labels_file)
 
     labels_file = os.path.abspath(labels_file)
 
