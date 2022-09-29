@@ -1,7 +1,13 @@
+# Config will set parameters for tasks only.
+# Pipeline will override some parameters.
+
 # common
 random_state: 42
 
 # clearml
+dataset_path: ./
+dataset_output_path: ./
+training_dataset_path: ./
 project_name: ASL_recognition
 dataset_name: ASL_raw
 training_dataset_name: ASL
@@ -13,8 +19,16 @@ class_num: 29
 
 # training
 model: resnet50
-epochs: 10
+epochs: 1
 batch_size: 64
 lr: 0.001
 num_workers: 4
 log_every: 100
+
+# inference
+training_task_id: "826321a133d54e7b9ea662e6babbdaaa"
+http_endpoint: 8000
+grpc_endpoint: 8001
+prometheus_endpoint: 8002
+server_host: localhost
+triton_path: "./../triton/"

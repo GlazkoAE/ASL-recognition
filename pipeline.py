@@ -6,9 +6,9 @@ from clearml import PipelineController
 def run_pipe(is_local):
 
     pipe = PipelineController(
-        name="Full pipeline",
+        name="ASL recognition full pipeline",
         project="ASL_recognition",
-        version="0.1.0",
+        version="1.0.0",
     )
 
     pipe.add_parameter("dataset_id", "")
@@ -35,7 +35,7 @@ def run_pipe(is_local):
     )
 
     pipe.add_step(
-        name="training_step",
+        name="training",
         parents=[
             "preparation_data",
         ],
@@ -45,6 +45,30 @@ def run_pipe(is_local):
             "General/dataset_id": "${preparation_data.parameters.General/output_dataset_id}",
             "General/class_num": "${preparation_data.parameters.General/class_num}",
             "General/dataset_name": "${preparation_data.parameters.General/output_dataset_name}",
+        },
+    )
+
+    pipe.add_step(
+        name="server_inference",
+        parents=[
+            "training",
+        ],
+        base_task_project="ASL_recognition",
+        base_task_name="build_triton_server",
+        parameter_override={
+            "General/training_task_id": "${training.id}",
+        },
+    )
+
+    pipe.add_step(
+        name="client_inference",
+        parents=[
+            "training",
+        ],
+        base_task_project="ASL_recognition",
+        base_task_name="build_triton_client",
+        parameter_override={
+            "General/training_task_id": "${training.id}",
         },
     )
 
