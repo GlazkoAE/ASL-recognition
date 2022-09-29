@@ -102,6 +102,7 @@ class Model:
         # Input to the model
         x = torch.randn(1, 3, image_size[0], image_size[1], requires_grad=True)
         path = os.path.join("../", name + ".onnx")
+        path = os.path.abspath(path)
 
         # Export the model
         torch.onnx.export(

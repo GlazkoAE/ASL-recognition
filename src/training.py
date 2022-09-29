@@ -66,6 +66,7 @@ def train_model(config: AppConfig):
         for item in dataset.labels_map:
             # write each item on a new line
             file.write("%s\n" % item)
+    labels_file = os.path.abspath(labels_file)
 
     return best_model_path, labels_file
 

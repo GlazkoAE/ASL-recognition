@@ -13,7 +13,7 @@ def main(config_path="../config/config.yaml"):
 
     task: Task = Task.init(
         project_name=config.project_name,
-        task_name="run_triton_client",
+        task_name="build_triton_client",
         task_type=TaskTypes.inference,
     )
 
