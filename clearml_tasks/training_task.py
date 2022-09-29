@@ -50,8 +50,8 @@ def main(config_path="../config/config.yaml"):
 
     task.upload_artifact(name="onnx_model", artifact_object=model_path)
     task.upload_artifact(name="labels_map", artifact_object=labels_map)
-    os.remove(model_path)
-    os.remove(labels_map)
+    # os.remove(model_path)
+    # os.remove(labels_map)
 
 
 if __name__ == "__main__":

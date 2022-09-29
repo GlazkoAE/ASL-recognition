@@ -12,7 +12,7 @@ from src.model import Model
 
 def train_model(config: AppConfig):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    writer = SummaryWriter("runs/fashion_trainer_{}".format(timestamp))
+    writer = SummaryWriter("runs/ASL_trainer_{}".format(timestamp))
 
     dataset: Dataset = Dataset(
         dataset_path=config.training_dataset_path,
@@ -65,7 +65,9 @@ def train_model(config: AppConfig):
     with open(labels_file, "w") as file:
         for item in dataset.labels_map:
             # write each item on a new line
+            print(item)
             file.write("%s\n" % item)
+
     labels_file = os.path.abspath(labels_file)
 
     return best_model_path, labels_file
