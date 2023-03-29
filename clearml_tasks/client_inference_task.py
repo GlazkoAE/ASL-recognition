@@ -1,14 +1,10 @@
-import sys
+from clearml import Task, TaskTypes
 
-sys.path.append("./..")
+from config.config import AppConfig
+from src.triton_client_preparation import build_triton_client
 
 
-def main(config_path="../config/config.yaml"):
-    from clearml import Task, TaskTypes
-
-    from config.config import AppConfig
-    from src.triton_client_preparation import build_triton_client
-
+def main(config_path="./config/config.yaml"):
     config: AppConfig = AppConfig.parse_raw(filename=config_path)
 
     task: Task = Task.init(

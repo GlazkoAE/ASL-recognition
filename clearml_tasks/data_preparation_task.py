@@ -1,18 +1,14 @@
 import os
-import sys
 from pathlib import Path
 
 from clearml import Dataset, Task, TaskTypes
 
-from utils import load_dataset
+from clearml_tasks.utils import load_dataset
+from config.config import AppConfig
+from src.data_preparation import get_class_num, prepare_data
 
 
-def main(config_path="../config/config.yaml"):
-    sys.path.append("./..")
-
-    from config.config import AppConfig
-    from src.data_preparation import get_class_num, prepare_data
-
+def main(config_path="./config/config.yaml"):
     config: AppConfig = AppConfig.parse_raw(filename=config_path)
     task: Task = Task.init(
         project_name=config.project_name,

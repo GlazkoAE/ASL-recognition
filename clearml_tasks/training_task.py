@@ -1,15 +1,12 @@
-import sys
 from pathlib import Path
 
-sys.path.append("./..")
+from clearml import Dataset, Task, TaskTypes
+
+from config.config import AppConfig
+from src.training import train_model
 
 
-def main(config_path="../config/config.yaml"):
-    from clearml import Dataset, Task, TaskTypes
-
-    from config.config import AppConfig
-    from src.training import train_model
-
+def main(config_path="./config/config.yaml"):
     config: AppConfig = AppConfig.parse_raw(filename=config_path)
 
     task: Task = Task.init(
@@ -49,8 +46,6 @@ def main(config_path="../config/config.yaml"):
 
     task.upload_artifact(name="onnx_model", artifact_object=model_path)
     task.upload_artifact(name="labels_map", artifact_object=labels_map)
-    # os.remove(model_path)
-    # os.remove(labels_map)
 
 
 if __name__ == "__main__":
