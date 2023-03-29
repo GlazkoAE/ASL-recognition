@@ -26,9 +26,7 @@ def main(config_path="./config/config.yaml"):
 
     dataset_path, input_dataset_id = load_dataset(clearml_params)
     config.dataset_path = Path(dataset_path)
-    config.dataset_output_path = os.path.join(
-        config.dataset_path, "..", clearml_params["output_dataset_name"]
-    )
+    config.dataset_output_path = dataset_path.parent / clearml_params["output_dataset_name"]
 
     prepare_data(config=config)
     class_num = get_class_num(config=config)
