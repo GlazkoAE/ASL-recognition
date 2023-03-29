@@ -1,18 +1,14 @@
 import os
-import sys
 from pathlib import Path
 
 from clearml import Dataset, Task, TaskTypes
 
-from utils import load_dataset
+from clearml_tasks.utils import load_dataset
+from config.config import AppConfig
+from src.data_preparation import get_class_num, prepare_data
 
 
-def main(config_path="../config/config.yaml"):
-    sys.path.append("./..")
-
-    from config.config import AppConfig
-    from src.data_preparation import get_class_num, prepare_data
-
+def main(config_path="./config/config.yaml"):
     config: AppConfig = AppConfig.parse_raw(filename=config_path)
     task: Task = Task.init(
         project_name=config.project_name,
@@ -30,9 +26,7 @@ def main(config_path="../config/config.yaml"):
 
     dataset_path, input_dataset_id = load_dataset(clearml_params)
     config.dataset_path = Path(dataset_path)
-    config.dataset_output_path = os.path.join(
-        config.dataset_path, "..", clearml_params["output_dataset_name"]
-    )
+    config.dataset_output_path = dataset_path.parent / clearml_params["output_dataset_name"]
 
     prepare_data(config=config)
     class_num = get_class_num(config=config)

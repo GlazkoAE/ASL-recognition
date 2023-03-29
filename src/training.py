@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 from datetime import datetime
 
 import torch
@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 from config.config import AppConfig
 from src.dataset import Dataset
-from src.model import Model
+from src.model import ModelTrainer
 
 
 def train_model(config: AppConfig):
@@ -20,7 +20,7 @@ def train_model(config: AppConfig):
         num_workers=config.num_workers,
     )
 
-    model: Model = Model(
+    model: ModelTrainer = ModelTrainer(
         model_name=config.model,
         optimizer=torch.optim.Adam,
         loss_func=torch.nn.CrossEntropyLoss(),
@@ -30,7 +30,7 @@ def train_model(config: AppConfig):
     )
 
     best_val_loss = 1e6
-    model_path = ""
+    model_path = Path("")
 
     for epoch in tqdm(range(config.epochs), desc="Model training"):
 
@@ -51,27 +51,25 @@ def train_model(config: AppConfig):
 
         if val_loss < best_val_loss:
             best_val_loss = val_loss
-            if model_path:
-                os.remove(model_path)
-            model_path = "model_{}_{}".format(timestamp, epoch)
+            model_path.unlink(missing_ok=True)
+            model_path = Path(f"model_{timestamp}_{epoch}.pth")
             torch.save(model.model.state_dict(), model_path)
 
     best_model_path = model.serialize(
         model_path=model_path, image_size=config.imsize, name=config.project_name
     )
-    os.remove(model_path)
+    model_path.unlink()
 
-    labels_file = "labels.txt"
+    labels_file = Path("labels.txt")
     with open(labels_file, "w") as file:
         for item in dataset.labels_map:
             # write each item on a new line
             print(item)
             file.write("%s\n" % item)
-    labels_file = os.path.abspath(labels_file)
+    abs_labels_file = str(labels_file.absolute())
+    abs_best_model_path = str(best_model_path.absolute())
 
-    labels_file = os.path.abspath(labels_file)
-
-    return best_model_path, labels_file
+    return abs_best_model_path, abs_labels_file
 
 
 def main():

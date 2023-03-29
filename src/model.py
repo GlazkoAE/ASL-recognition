@@ -1,4 +1,5 @@
-import os
+from pathlib import Path
+import pathlib
 
 import sklearn.metrics as metrics
 import torch
@@ -7,7 +8,7 @@ from torch import nn
 from src.utils import get_model
 
 
-class Model:
+class ModelTrainer:
     def __init__(self, model_name, optimizer, loss_func, lr, class_num, seed):
         torch.manual_seed(seed)
         self.model = get_model(model_name)
@@ -101,21 +102,20 @@ class Model:
 
         # Input to the model
         x = torch.randn(1, 3, image_size[0], image_size[1], requires_grad=True)
-        path = os.path.join("../", name + ".onnx")
-        path = os.path.abspath(path)
+        onnx_path = Path(pathlib.__file__).parent / (name + ".onnx")
 
         # Export the model
         torch.onnx.export(
             self.model,  # model being run
             x,  # model input
-            path,
+            onnx_path,
             export_params=True,
             opset_version=10,
             do_constant_folding=True,
             input_names=["input"],
             output_names=["output"],
         )
-        return path
+        return onnx_path
 
     def _freeze_layers(self):
         for param in self.model.parameters():

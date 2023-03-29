@@ -1,7 +1,7 @@
 name: auto-format
 
 on:
-  [pull_request]
+  [push, pull_request]
 
 jobs:
   flake8:
@@ -10,7 +10,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v1
         with:
-          python-version: 3.9.14
+          python-version: 3.9.16
           architecture: x64
       - name: Checkout repo
         uses: actions/checkout@v2

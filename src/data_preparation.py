@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 import splitfolders
 from PIL import Image
@@ -17,11 +17,11 @@ def prepare_data(config: AppConfig):
 
 
 def get_class_num(config: AppConfig):
-    dataset_path = config.dataset_output_path
-    train_path = os.path.join(dataset_path, "train")
+    dataset_path = Path(config.dataset_output_path)
+    train_path = dataset_path / "train"
     class_num = 0
-    for class_dir in os.listdir(train_path):
-        if os.path.isdir(os.path.join(train_path, class_dir)):
+    for class_dir in train_path.iterdir():
+        if class_dir.is_dir():
             class_num += 1
     return class_num
 
