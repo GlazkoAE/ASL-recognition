@@ -7,25 +7,25 @@ from config.config import AppConfig
 def build_triton_server(config: AppConfig, model):
 
     # Setup all paths
-    server_path = Path(config.triton_path / "server" / "models")
-    preprocess_path = Path(server_path / "preprocess")
-    model_path = Path(server_path / config.model)
-    ensemble_path = Path(server_path / "ensemble")
-    config_template_path = Path(server_path / "config_template.pbtxt")
+    server_path = Path(config.triton_path) / "server" / "models"
+    preprocess_path = server_path / "preprocess"
+    model_path = server_path / config.model
+    ensemble_path = server_path / "ensemble"
+    config_template_path = server_path / "config_template.pbtxt"
 
     # Move artifacts to server
-    os.rename(model, Path(model_path / "1" / "model.onnx"))
+    os.rename(model, model_path / "1" / "model.onnx")
 
     _write_ensemble_config(
-        config_path=Path(ensemble_path / "config.pbtxt"), config=config
+        config_path=ensemble_path / "config.pbtxt", config=config
     )
     _write_model_config(
-        config_path=Path(model_path / "config.pbtxt"),
+        config_path=model_path / "config.pbtxt",
         template=config_template_path,
         config=config,
     )
     _write_preprocess_config(
-        config_path=Path(preprocess_path / "config.pbtxt"),
+        config_path=preprocess_path / "config.pbtxt",
         template=config_template_path,
         config=config,
     )

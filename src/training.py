@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 from config.config import AppConfig
 from src.dataset import Dataset
-from src.model import Model
+from src.model import ModelTrainer
 
 
 def train_model(config: AppConfig):
@@ -20,7 +20,7 @@ def train_model(config: AppConfig):
         num_workers=config.num_workers,
     )
 
-    model: Model = Model(
+    model: ModelTrainer = ModelTrainer(
         model_name=config.model,
         optimizer=torch.optim.Adam,
         loss_func=torch.nn.CrossEntropyLoss(),

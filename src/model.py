@@ -8,7 +8,7 @@ from torch import nn
 from src.utils import get_model
 
 
-class Model:
+class ModelTrainer:
     def __init__(self, model_name, optimizer, loss_func, lr, class_num, seed):
         torch.manual_seed(seed)
         self.model = get_model(model_name)
